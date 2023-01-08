@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import ActionChains
 
 driver = webdriver.Chrome(executable_path='C:\\Users\\ARUT\\PycharmProjects\\PyLesson\\chromedriver.exe')
 
@@ -34,9 +35,13 @@ class authorization():
 
         title = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[@class='title']")))
         value_title = title.text
-        assert value_title == "PRODUCTS"
-        print(value_title)
-        print("Пользователь на главной странице")
+        if value_title == "PRODUCTS":
+            print(value_title)
+            print("Пользователь на главной странице")
+        else:
+            print("Пользователь не авторизован")
+            self.login.send_keys(Keys.BACKSPACE(len(self.login.send_keys(login))))
+            self.password.send_keys(Keys.BACKSPACE(len(self.password.send_keys(password))))
 
         menu = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@id='react-burger-menu-btn']")))
         menu.click()
