@@ -1,59 +1,61 @@
 import time
 from selenium import webdriver
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver import ActionChains
+from selenium.webdriver import ActionChains, Keys
 
-driver = webdriver.Chrome(executable_path='C:\\Users\\ARUT\\PycharmProjects\\PyLesson\\chromedriver.exe')
+webdriver = webdriver.Chrome(executable_path='C:\\Users\\ARUT\\PycharmProjects\\PyLesson\\chromedriver.exe')
 
 base_url = 'https://www.saucedemo.com/'
 
-driver.get(base_url)
+webdriver.get(base_url)
 # driver.maximize_window()
 
-login = ['standard_user', 'locked_out_user', 'problem_user', 'performance_glitch_user']
-password = 'secret_sauce'
-wait = WebDriverWait(driver, 5)
+logins = ['standard_user', 'locked_out_user', 'problem_user', 'performance_glitch_user']
+main_pass = 'secret_sauce'
 
-class authorization():
-    def __init__(self):
-        print("")
 
-    def login (self, login, password):
-        self.login = login
-        self.password = password
+class Authorization:
+    def __init__(self, driver):
+        self.driver = driver
 
-        self.login = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='user-name']")))
-        self.login.send_keys(login)
+    def login(self, login, password):
+        wait = WebDriverWait(self.driver, 5)
+        login_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='user-name']")))
+        login_locator.send_keys(login)
 
-        self.password = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='password']")))
-        self.password.send_keys(password)
+        password_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='password']")))
+        password_locator.send_keys(password)
 
-        button_login = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='login-button']")))
-        button_login.click()
+        button_login_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='login-button']")))
+        button_login_locator.click()
+        try:
+            title_locator = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[@class='title']")))
+            value_title = title_locator.text
+            print("Пользователь на главной странице", end='\n')
 
-        title = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[@class='title']")))
-        value_title = title.text
-        if value_title == "PRODUCTS":
-            print(value_title)
-            print("Пользователь на главной странице")
-        else:
+            menu = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@id='react-burger-menu-btn']")))
+            menu.click()
+
+            logout = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@id='logout_sidebar_link']")))
+            logout.click()
+        except TimeoutException:
             print("Пользователь не авторизован")
-            self.login.send_keys(Keys.BACKSPACE(len(self.login.send_keys(login))))
-            self.password.send_keys(Keys.BACKSPACE(len(self.password.send_keys(password))))
+            error_button_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='error-button']")))
+            error_button_locator.click()
+            login_locator.send_keys(Keys.BACKSPACE)
+            password_locator.send_keys(Keys.BACKSPACE)
 
-        menu = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@id='react-burger-menu-btn']")))
-        menu.click()
 
-        logout = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@id='logout_sidebar_link']")))
-        logout.click()
+auth = Authorization(webdriver)
 
-for i in login:
-    auth = authorization()
-    auth.login(i, password)
+for i in logins:
+    print("Пользователь : ", i)
+    auth.login(i, main_pass)
 
-time.sleep(100)
 
+time.sleep(50)
 
 
