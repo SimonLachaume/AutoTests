@@ -45,8 +45,8 @@ class Authorization:
             print("Пользователь не авторизован")
             error_button_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='error-button']")))
             error_button_locator.click()
-            login_locator.send_keys(Keys.BACKSPACE)
-            password_locator.send_keys(Keys.BACKSPACE)
+            login_locator.send_keys(Keys.BACKSPACE * len(login))
+            password_locator.send_keys(Keys.BACKSPACE * len(password))
 
 
 auth = Authorization(webdriver)
