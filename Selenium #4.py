@@ -26,26 +26,44 @@ class Authorization:
         login_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='user-name']")))
         login_locator.send_keys(login)
 
+        time.sleep(1)
+
         password_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='password']")))
         password_locator.send_keys(password)
 
+        time.sleep(1)
+
         button_login_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='login-button']")))
         button_login_locator.click()
+
         try:
             title_locator = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[@class='title']")))
             value_title = title_locator.text
-            print("Пользователь на главной странице", end='\n')
+            print("Пользователь на главной странице")
+
+            time.sleep(1)
 
             menu = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@id='react-burger-menu-btn']")))
             menu.click()
 
+            time.sleep(1)
+
             logout = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@id='logout_sidebar_link']")))
             logout.click()
+
+            time.sleep(1)
+
         except TimeoutException:
             print("Пользователь не авторизован")
             error_button_locator = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='error-button']")))
             error_button_locator.click()
+
+            time.sleep(1)
+
             login_locator.send_keys(Keys.BACKSPACE * len(login))
+
+            time.sleep(1)
+
             password_locator.send_keys(Keys.BACKSPACE * len(password))
 
 
@@ -54,7 +72,6 @@ auth = Authorization(webdriver)
 for i in logins:
     print("Пользователь : ", i)
     auth.login(i, main_pass)
-
 
 time.sleep(50)
 
