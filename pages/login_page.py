@@ -14,22 +14,26 @@ class Login_page():
         print("Инициализация авторизации")
 
         user_profile = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//i[@class='la la-user']")))
-        user_profile.click()
+        user_profile.click() # Нажатие на кнопку логина
 
         email = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='CustomerEmail']")))
-        email.send_keys(login_mail)
+        email.send_keys(login_mail) # Ввод логина
+
+        print("Пользователь ввел логин")
 
         time.sleep(1)
 
         password = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='CustomerPassword']")))
-        password.send_keys(login_pass)
+        password.send_keys(login_pass)  # Ввод пароля
+
+        print("Пользователь ввел пароль")
 
         time.sleep(1)
 
         login_button = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@class='button button__primary']")))
-        login_button.click()
+        login_button.click()    # Нажатие на кнопку логина
 
         time.sleep(1)
 
         go_to_catalog = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='translation-error']")))
-        go_to_catalog.click()
+        go_to_catalog.click()   # Возврат на главную страницу
